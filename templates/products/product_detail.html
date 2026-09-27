@@ -1,0 +1,56 @@
+{% extends 'base.html'%}
+
+{% block title %}
+
+{{ product.name }} | Djangoshop
+
+{%endblock%}
+
+{% block content %}
+
+<div class="prodcut_detail">
+    <div class="product-detail-image">
+        {% if product.image %}
+        <img src="{{product.image.url}}" alt="{{product.name}}">
+
+        {% endif %}
+
+    </div>
+
+    <div class="prodcut-details-info">
+        <h1>{{product.name}}</h1>
+
+        <p class="detail-category">
+            Category:{{product.category.name}}
+        </p>
+
+        <p class="details-description">
+            {{product.description}}
+        </p>
+
+        {% if product.stock > 0 %}
+        <p class="detail-stock available">
+            In stock:{{product.stock}}
+        </p>
+
+        <form method="POST" action="{% url 'add_to_cart' product.id %}">
+            {% csrf_token %}
+            <button class="cart-button" type="submit">
+                Add to Cart
+            </button>
+        </form>
+        
+        {% else %}
+        <p class="detail-stock unavailable">
+            Out of Stock
+        </p>
+
+        {% endif %}
+
+
+
+    </div>
+
+</div>
+
+{% endblock %}

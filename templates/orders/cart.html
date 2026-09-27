@@ -1,0 +1,105 @@
+{% extends 'base.html'%}
+
+{% block title%}
+
+Shopping Cart | Djangoshop
+
+{% endblock %}
+
+{% block content %}
+
+<h1 class="page-title">
+    Shopping Cart
+
+</h1>
+
+{% if cart_items %}
+
+<div class="cart-container">
+    <div class="cart-items">
+        {% for item in cart_items%}
+        <div class="cart-item">
+            <div class="cart-item-image">
+                {% if item.product.image%}
+
+                    <img src="{{item.product.image.url}}" alt="{{item.product.name}}">
+
+                {% endif %}
+            </div>
+
+            <div class="cart-item-info">
+                <h2>
+                    {{item.product.name}}
+                </h2>
+
+                <p>
+                    Price:
+                    Rs{{item.product.price}}
+                </p>
+
+                <p>
+                    <!-- Quantity:
+                    {{ item.quantity}} -->
+
+                    <div class="quantity-controls">
+
+                        <form method="POST" action="{% url 'update_cart' item.id %}">
+                            {% csrf_token %}
+
+                            <button type="submit" name="action" value="decrease" class="quantity-button">-</button>
+                        </form>
+
+                        <span class="quantity">
+                            {{item.quantity}}
+                        </span>
+
+                        <form method="POST" action="{% url 'update_cart' item.id %}">
+                            {% csrf_token%}
+
+                            <button type="submit" name="action" value="increase" class="quantity-button">+</button>
+                        </form>
+
+                        <form method="POST" action="{% url 'remove_from_cart' item.id %}">
+
+                        {% csrf_token %}
+
+                        <button type="submit" class="remove-button">Remove</button>
+                        </form>
+                    </div>
+                </p>
+
+                <p>
+                    Subtotal:
+                    Rs{{item.get_total_price}}
+                </p>
+
+            </div>
+        </div>
+        {%endfor%}
+
+    </div>
+
+    <div class="cart-summary">
+
+        <h2>Cart Summary</h2>
+        <p class="cart-total">
+            Total:
+            Rs{{total}}
+        </p>
+
+        <a href="{% url 'checkout' %}" class="checkout-button">Proceed to Checkout </a>
+    </div>
+</div>
+
+{% else %}
+
+<div class="empyt-cart">
+    <h2>Your cart is empty</h2>
+    <a href="{% url 'product_list' %}">
+        Continue Shopping
+    </a>
+</div>
+
+{% endif %}
+
+{% endblock %}

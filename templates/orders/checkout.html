@@ -1,0 +1,63 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<h1>Checkout</h1>
+
+<h2>Customer Information</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div>
+        <label>Phone Number</label>
+        <input type="text" name="phone" maxlength="15" required>
+    </div>
+    <br>
+    <div>
+        <label>Delivery Address</label>
+        <textarea name="address" rows="5" required></textarea>
+    </div>
+    <hr>
+
+
+<h2>Order summary</h2>
+
+{% for item in cart_items %}
+
+<div class="checkout-item">
+
+    <h3>{{ item.product.name}}</h3>
+
+    <p>
+        Quantity:
+        {{item.quantity}}
+    </p>
+
+    <p>
+        Price:
+        Rs.{{item.product.price}}
+    </p>
+
+    <p>
+        Total:
+        Rs{{item.get_total_price}}
+    </p>
+</div>
+
+<hr>
+
+{% endfor %}
+
+<h2>
+    Grand Total :Rs.{{total}}
+</h2>
+
+
+    <button type="submit">
+        Place Order
+    </button>
+</form>
+
+{% endblock %}
+
